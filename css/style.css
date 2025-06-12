@@ -423,3 +423,15 @@ AJUSTE DE POSIÇÃO DO WHATSAPP FLUTUANTE (CORRIGIDO)
 body.player-inferior-ativo .whatsapp-float {
     bottom: 95px; /* Altura para ficar acima do player */
 }
+
+/*
+======================================================
+ REMOVE A BORDA DE FOCO DOS ÍCONES DE REDES SOCIAIS
+======================================================
+*/
+.navbar-redes a:focus,
+.redes-sociais-footer a:focus,
+.whatsapp-float:focus {
+    outline: none;
+    box-shadow: none; /* Garante a remoção de qualquer brilho de foco */
+}

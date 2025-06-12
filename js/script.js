@@ -15,15 +15,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingIcon = '<i class="fas fa-spinner fa-spin"></i>';
 
     // ===================================================================
-    // 2. LÓGICA DO PLAYER DE ÁUDIO
+    // 2. LÓGICA DO PLAYER DE ÁUDIO COM LOCALSTORAGE
     // ===================================================================
 
     if (!audio) return;
 
     function togglePlayState() {
-        audio.paused ? audio.play().catch(e => console.error("Erro ao tocar:", e)) : audio.pause();
+        if (audio.paused) {
+            audio.play().catch(e => console.error("Erro ao tocar:", e));
+        } else {
+            audio.pause();
+        }
     }
 
+    // --- Eventos do Player ---
     audio.onplaying = function() {
         playPauseBtns.forEach(btn => {
             const playerPai = btn.closest('#player-lateral');
@@ -31,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         if (playerInferior) playerInferior.classList.add('player-visivel');
         document.body.classList.add('player-inferior-ativo');
+        localStorage.setItem('radioAlpesPlayerState', 'playing'); // Salva o estado
     };
 
     audio.onpause = function() {
@@ -40,8 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         if (playerInferior) playerInferior.classList.remove('player-visivel');
         document.body.classList.remove('player-inferior-ativo');
+        localStorage.setItem('radioAlpesPlayerState', 'paused'); // Salva o estado
     };
-    
+
     audio.onwaiting = function() {
         playPauseBtns.forEach(btn => {
             const playerPai = btn.closest('#player-lateral');
@@ -49,6 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 
+    // --- Eventos dos Controles ---
     playPauseBtns.forEach(btn => btn.addEventListener('click', togglePlayState));
     
     if (botaoOuvir) {
@@ -60,8 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     volumeSliders.forEach(slider => {
         slider.addEventListener('input', function() {
-            audio.volume = this.value;
+            const newVolume = parseFloat(this.value);
+            audio.volume = newVolume;
             audio.muted = false;
+            localStorage.setItem('radioAlpesVolume', newVolume); // Salva o volume
         });
     });
 
@@ -81,21 +91,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // --- LÓGICA DE AUTOPLAY AO CARREGAR A PÁGINA ---
+    function iniciarPlayerSalvo() {
+        const savedVolume = localStorage.getItem('radioAlpesVolume');
+        if (savedVolume !== null) {
+            audio.volume = parseFloat(savedVolume);
+        }
+
+        const savedState = localStorage.getItem('radioAlpesPlayerState');
+        if (savedState === 'playing') {
+            // Tenta dar o play. Se o navegador bloquear, um aviso aparecerá no console.
+            audio.play().catch(e => {
+                console.warn("Autoplay bloqueado pelo navegador. O usuário precisa interagir com a página.");
+                // Se falhar, garante que o estado seja 'paused' para consistência.
+                localStorage.setItem('radioAlpesPlayerState', 'paused');
+            });
+        }
+    }
+    
+    iniciarPlayerSalvo();
+
+
     // ===================================================================
-    // 3. CONTEÚDO DINÂMICO E ANIMAÇÕES
+    // 3. OUTRAS FUNCIONALIDADES DA PÁGINA (PROGRAMAÇÃO, NAVEGAÇÃO, ETC)
     // ===================================================================
     const agendaContainer = document.getElementById('agenda-row');
     if (agendaContainer) {
         const programacao = [{ horario: "O DIA TODO", nome: "Música e Informação" }];
         let cardsHTML = '';
         programacao.forEach(programa => {
-            cardsHTML += `
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card-agenda">
-                        <div class="horario">${programa.horario}</div>
-                        <h3 class="nome-programa">${programa.nome}</h3>
-                    </div>
-                </div>`;
+            cardsHTML += `<div class="col-md-6 col-lg-4 mb-4"><div class="card-agenda"><div class="horario">${programa.horario}</div><h3 class="nome-programa">${programa.nome}</h3></div></div>`;
         });
         agendaContainer.innerHTML = cardsHTML;
     }
@@ -113,9 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
         cardsAgenda.forEach(card => observer.observe(card));
     }
 
-    // ===================================================================
-    // 4. NAVEGAÇÃO E COMPORTAMENTO DO MENU
-    // ===================================================================
     document.querySelectorAll('.navbar-nav a[href]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -149,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ===================================================================
-// 5. INICIALIZAÇÃO DE PLUGINS EXTERNOS
+// 4. INICIALIZAÇÃO DE PLUGINS EXTERNOS
 // ===================================================================
 if (document.querySelector('.swiper-container')) {
     var swiper = new Swiper('.swiper-container', {
@@ -163,7 +185,7 @@ if (document.querySelector('.swiper-container')) {
 }
 
 // ===================================================================
-// 6. LÓGICA INTELIGENTE PARA LINKS DO WHATSAPP
+// 5. LÓGICA INTELIGENTE PARA LINKS DO WHATSAPP
 // ===================================================================
 function configurarLinksWhatsApp() {
     const numeroTelefone = '554192566711';
@@ -175,7 +197,6 @@ function configurarLinksWhatsApp() {
     }
 
     let linkWhatsApp;
-
     if (isMobileDevice()) {
         linkWhatsApp = `https://api.whatsapp.com/send?phone=${numeroTelefone}&text=${mensagemCodificada}`;
     } else {
