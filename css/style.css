@@ -9,8 +9,8 @@ body {
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-    padding: 0; /* O padding problemático foi removido daqui */
-    font-family: 'Lato', sans-serif; /* Ajustado para a fonte que está sendo importada */
+    padding: 0; 
+    font-family: 'Lato', sans-serif; 
     background: linear-gradient(125deg, #02588b, #006699, #1f96c1);
     background-size: cover;
     background-attachment: fixed;
@@ -22,7 +22,7 @@ main {
     flex-grow: 1;
 }
 
-/* Centraliza perfeitamente a seção de boas-vindas */
+/* Centraliza a seção de boas-vindas */
 #home {
     display: flex;
     align-items: center;
@@ -74,7 +74,7 @@ section:not(#home) {
 #player-lateral .controle-play-pause:hover { background-color: #0f78e8; }
 #player-lateral .controle-play-pause i { margin-right: 8px; }
 
-/* PLAYER INFERIOR ESTILO SPOTIFY (Desktop) - COM ANIMAÇÃO */
+/* PLAYER INFERIOR ESTILO SPOTIFY*/
 #player-inferior-spotify {
     position: fixed;
     bottom: 0; left: 0;
@@ -116,7 +116,7 @@ section:not(#home) {
 #player-inferior-spotify .volume-container { justify-content: flex-end; }
 
 
-/* CONTROLES DE VOLUME (Comum a ambos os players de desktop) */
+/* CONTROLES DE VOLUME*/
 .volume-container { display: flex; align-items: center; gap: 10px; }
 .controle-volume-icone { cursor: pointer; font-size: 20px; color: #fff; width: 25px; text-align: center; }
 #player-lateral .controle-volume-icone { color: #333; }
@@ -202,7 +202,7 @@ nav.navbar-transparente {
 
 /*
 =================================
- ESTILOS DO RODAPÉ (ATUALIZADO)
+ ESTILOS DO RODAPÉ 
 =================================
 */
 footer {
@@ -411,7 +411,7 @@ h1, h2, h3, h4, h5, h6, .titulo-brilhante {
 
 /*
 =================================
-AJUSTE DE POSIÇÃO DO WHATSAPP FLUTUANTE (CORRIGIDO)
+AJUSTE DE POSIÇÃO DO WHATSAPP FLUTUANTE 
 =================================
 */
 .whatsapp-float {
@@ -419,9 +419,8 @@ AJUSTE DE POSIÇÃO DO WHATSAPP FLUTUANTE (CORRIGIDO)
     transition: bottom 0.4s ease;
 }
 
-/* Quando o body tiver a classe 'player-inferior-ativo', sobe o botão */
 body.player-inferior-ativo .whatsapp-float {
-    bottom: 95px; /* Altura para ficar acima do player */
+    bottom: 95px; 
 }
 
 /*
@@ -433,5 +432,5 @@ body.player-inferior-ativo .whatsapp-float {
 .redes-sociais-footer a:focus,
 .whatsapp-float:focus {
     outline: none;
-    box-shadow: none; /* Garante a remoção de qualquer brilho de foco */
+    box-shadow: none; 
 } 
