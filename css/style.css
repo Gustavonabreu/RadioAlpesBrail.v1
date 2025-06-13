@@ -434,4 +434,6 @@ body.player-inferior-ativo .whatsapp-float {
 .whatsapp-float:focus {
     outline: none;
     box-shadow: none; /* Garante a remoção de qualquer brilho de foco */
-}
+} 
+
+/*teste*/
